@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.core.db import engine
-from app.routers.helalth import router as health_router
+from app.routers.health import router as health_router
 
 
 @asynccontextmanager

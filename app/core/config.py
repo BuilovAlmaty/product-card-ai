@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     llm_base_url: str | None = None
     llm_api_key: str | None = None
     llm_model: str | None = None
+    rabbitmq_url: str | None = None
 
     model_config = SettingsConfigDict(
         env_file='.env',

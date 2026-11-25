@@ -11,7 +11,7 @@ MODEL_GPU ?= off
 MODEL_CONTEXT ?= 2048
 
 .PHONY: help dev api infra postgres rabbitmq infra-stop docker-status \
-        model model-status lint format test check health
+        model model-status lint format test check health worker
 
 help:
 	@printf '%s\n' \
@@ -30,9 +30,9 @@ help:
 		'make test          Запустить pytest' \
 		'make check         Запустить линтер и тесты'
 
-dev: infra model
+dev: infra model api
 
-dev api:
+api:
 	uv run fastapi dev app/main.py --port "$(API_PORT)"
 
 infra:
@@ -80,3 +80,10 @@ test:
 	uv run pytest -q
 
 check: lint test
+
+worker:
+	uv run celery -A app.workers.celery_app:celery_app worker \
+		--hostname=card-worker@%h \
+		-Q card.generate,card.critique \
+		--concurrency=1 \
+		-l info
